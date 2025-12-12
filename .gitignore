@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+env3/
+venv3/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.tox/
+coverage/
+
+# Distribution
+*.egg-info/
+build/
+dist/
+MANIFEST
+
+# Application data
+.deck_box/
