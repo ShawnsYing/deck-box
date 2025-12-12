@@ -8,6 +8,7 @@ env/
 venv/
 env3/
 venv3/
+deck-box/
 
 # IDE
 .idea/
