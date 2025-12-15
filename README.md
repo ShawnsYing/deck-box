@@ -235,6 +235,11 @@ Each card contains:
 
 MIT License - feel free to use and modify!
 
+# TODO
+
+* [ ] Be able to configure the API key and use AI for task analysis and disassembly recommendations.
+* [ ] Be able to specify specific cards using the first few digits of the card ID.
+
 ---
 
 **Happy Tasking!** 🎉🎴
