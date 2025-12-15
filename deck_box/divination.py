@@ -3,18 +3,20 @@ from .models import Card, CardStatus
 from .storage import Storage
 
 class Divination:
+    """Divination class, responsible for drawing cards from the deck box"""
     def __init__(self):
+        """Initialize divination class"""
         self.storage = Storage()
-        # 定义不同级别的概率权重（级别越高，权重越低）
+        # Define probability weights for different levels (higher level has lower weight)
         self.level_weights = {
-            1: 4,   # 15分钟以内，最高概率
-            2: 3,   # 16-30分钟，较高概率
-            3: 2,   # 31-60分钟，较低概率
-            4: 1    # 60分钟以上，最低概率
+            1: 4,   # Within 15 minutes, highest probability
+            2: 3,   # 16-30 minutes, higher probability
+            3: 2,   # 31-60 minutes, lower probability
+            4: 1    # Over 60 minutes, lowest probability
         }
     
     def _get_available_cards(self):
-        """获取所有可用的卡片（未完成且前置已完成）"""
+        """Get all available cards (pending and predecessors completed)"""
         cards = self.storage.load_cards()
         available_cards = []
         
@@ -22,7 +24,7 @@ class Divination:
             if card.status != CardStatus.PENDING:
                 continue
             
-            # 检查前置卡片是否存在且已完成
+            # Check if predecessor cards exist and are completed
             if card.predecessor_id:
                 predecessor = self.storage.get_card_by_id(card.predecessor_id)
                 if not predecessor or predecessor.status != CardStatus.COMPLETED:
@@ -33,16 +35,16 @@ class Divination:
         return available_cards
     
     def _select_card_by_probability(self, available_cards):
-        """根据概率权重选择一张卡片"""
+        """Select a card based on probability weights"""
         if not available_cards:
             return None
         
-        # 计算总权重
+        # Calculate total weight
         total_weight = sum(self.level_weights[card.level] for card in available_cards)
         if total_weight == 0:
             return random.choice(available_cards)
         
-        # 根据权重随机选择
+        # Select randomly based on weights
         random_value = random.uniform(0, total_weight)
         current_weight = 0
         
@@ -51,16 +53,16 @@ class Divination:
             if random_value <= current_weight:
                 return card
         
-        # 防止计算误差
+        # Prevent calculation errors
         return random.choice(available_cards)
     
     def perform_divination(self, min_time=90, max_time=150):
-        """执行占卜，抽取总时间在指定范围内的卡片组合"""
+        """Perform divination to draw a combination of cards within specified time range"""
         available_cards = self._get_available_cards()
         if not available_cards:
             return None
         
-        # 如果只有一张卡片且时间在范围内，直接返回
+        # If only one card and time is within range, return directly
         if len(available_cards) == 1:
             card = available_cards[0]
             if min_time <= card.estimated_time <= max_time:
@@ -73,10 +75,10 @@ class Divination:
         best_time_diff = float('inf')
         
         for _ in range(max_attempts):
-            # 随机选择卡片数量（1-5张）
+            # Randomly select number of cards (1-5)
             num_cards = random.randint(1, min(5, len(available_cards)))
             
-            # 基于概率选择卡片
+            # Select cards based on probability
             selected_cards = []
             available_pool = available_cards.copy()
             total_time = 0
@@ -90,20 +92,20 @@ class Divination:
                 total_time += card.estimated_time
                 available_pool.remove(card)
             
-            # 检查总时间是否在范围内
+            # Check if total time is within range
             if min_time <= total_time <= max_time:
                 return selected_cards
             
-            # 如果不在范围内，记录最接近的组合
+            # If not in range, record the closest combination
             if abs(total_time - (min_time + max_time) / 2) < best_time_diff:
                 best_time_diff = abs(total_time - (min_time + max_time) / 2)
                 best_combination = selected_cards
         
-        # 如果没有找到完全匹配的组合，返回最接近的
+        # If no exact matching combination found, return the closest one
         return best_combination
     
     def draw_single_card(self):
-        """抽取一张卡片"""
+        """Draw a single card"""
         available_cards = self._get_available_cards()
         if not available_cards:
             return None

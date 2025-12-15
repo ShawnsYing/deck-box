@@ -25,6 +25,7 @@ Thumbs.db
 .pytest_cache/
 .tox/
 coverage/
+test.ipynb
 
 # Distribution
 *.egg-info/

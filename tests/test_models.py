@@ -4,7 +4,7 @@ from deck_box.models import Card, CardStatus, Mood, Quality
 
 class TestCardModel(unittest.TestCase):
     def test_card_creation(self):
-        """测试卡片创建"""
+        """Test card creation"""
         card = Card("完成项目文档", 15, "work", "编写项目的技术文档")
         
         self.assertEqual(card.name, "完成项目文档")
@@ -15,32 +15,32 @@ class TestCardModel(unittest.TestCase):
         self.assertIsNone(card.predecessor_id)
     
     def test_calculate_level(self):
-        """测试卡片级别计算"""
-        # 测试级别1 (<=15分钟)
+        """Test card level calculation"""
+        # Test level 1 (<=15 minutes)
         card1 = Card("简单任务", 10)
         self.assertEqual(card1.level, 1)
         
-        # 测试级别2 (16-30分钟)
+        # Test level 2 (16-30 minutes)
         card2 = Card("中等任务", 25)
         self.assertEqual(card2.level, 2)
         
-        # 测试级别3 (31-60分钟)
+        # Test level 3 (31-60 minutes)
         card3 = Card("复杂任务", 45)
         self.assertEqual(card3.level, 3)
         
-        # 测试级别4 (>60分钟)
+        # Test level 4 (>60 minutes)
         card4 = Card("非常复杂的任务", 90)
         self.assertEqual(card4.level, 4)
     
     def test_complete_card(self):
-        """测试卡片完成功能"""
+        """Test card completion functionality"""
         card = Card("测试任务", 10)
         self.assertEqual(card.status, CardStatus.PENDING)
         self.assertIsNone(card.completed_at)
         self.assertIsNone(card.mood)
         self.assertIsNone(card.quality)
         
-        # 标记卡片为已完成
+        # Mark card as completed
         card.complete(Mood.GOOD, 8, Quality.EXCELLENT)
         
         self.assertEqual(card.status, CardStatus.COMPLETED)
@@ -50,7 +50,7 @@ class TestCardModel(unittest.TestCase):
         self.assertEqual(card.quality, Quality.EXCELLENT)
     
     def test_to_dict(self):
-        """测试转换为字典功能"""
+        """Test conversion to dictionary"""
         card = Card("测试任务", 10, "test", "测试描述")
         card_dict = card.to_dict()
         
@@ -61,7 +61,7 @@ class TestCardModel(unittest.TestCase):
         self.assertEqual(card_dict["status"], "pending")
     
     def test_from_dict(self):
-        """测试从字典创建卡片功能"""
+        """Test card creation from dictionary"""
         card_data = {
             "id": "test-id-123",
             "name": "测试任务",

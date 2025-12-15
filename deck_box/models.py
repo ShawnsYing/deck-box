@@ -36,7 +36,7 @@ class Card:
         self.predecessor_id = predecessor_id
 
     def _calculate_level(self):
-        """根据预计时间计算卡片级别"""
+        """Calculate card level based on estimated time"""
         if self.estimated_time <= 15:
             return 1
         elif self.estimated_time <= 30:
@@ -47,7 +47,7 @@ class Card:
             return 4
 
     def complete(self, mood, actual_time, quality):
-        """标记卡片为已完成"""
+        """Mark the card as completed"""
         self.status = CardStatus.COMPLETED
         self.completed_at = datetime.now()
         self.mood = mood
@@ -55,7 +55,7 @@ class Card:
         self.quality = quality
 
     def to_dict(self):
-        """转换为字典格式以便存储"""
+        """Convert to dictionary format for storage"""
         return {
             "id": self.id,
             "name": self.name,
@@ -74,7 +74,7 @@ class Card:
 
     @classmethod
     def from_dict(cls, data):
-        """从字典创建Card实例"""
+        """Create a Card instance from a dictionary"""
         card = cls(
             name=data["name"],
             estimated_time=data["estimated_time"],
@@ -100,7 +100,7 @@ class DivinationResult:
         self.created_at = datetime.now()
 
     def to_dict(self):
-        """转换为字典格式以便存储"""
+        """Convert to dictionary format for storage"""
         return {
             "id": self.id,
             "cards": [card.to_dict() for card in self.cards],
@@ -110,7 +110,7 @@ class DivinationResult:
 
     @classmethod
     def from_dict(cls, data):
-        """从字典创建DivinationResult实例"""
+        """Create DivinationResult instance from dictionary"""
         cards = [Card.from_dict(card_data) for card_data in data["cards"]]
         result = cls(cards)
         result.id = data["id"]
